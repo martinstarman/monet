@@ -1,11 +1,55 @@
-pub mod monet;
-use monet::Monet;
+mod event;
+mod gui;
 
-fn main() -> eframe::Result {
-    let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default().with_inner_size([320.0, 240.0]),
+use bevy::{
+    prelude::*,
+    render::{
+        render_asset::RenderAssetUsages,
+        render_resource::{Extent3d, TextureDimension, TextureFormat},
+    },
+};
+use bevy_egui::EguiPlugin;
+
+use event::mouse_wheel::mouse_wheel;
+use gui::top_menu_bar::top_menu_bar;
+
+fn main() {
+    App::new()
+        .insert_resource(ClearColor(Color::srgb(0.35, 0.35, 0.38)))
+        .add_plugins(DefaultPlugins)
+        .add_plugins(EguiPlugin)
+        .add_systems(Startup, (setup_camera, setup_image))
+        .add_systems(Update, top_menu_bar)
+        .add_systems(Update, mouse_wheel)
+        .run();
+}
+
+fn setup_camera(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
+}
+
+fn setup_image(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
+    let size = Extent3d {
+        width: 10,
+        height: 10,
         ..Default::default()
     };
+    let dimension = TextureDimension::D2;
+    let data: Vec<u8> = vec![
+        127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
+        127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
+        127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
+        127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
+        127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
+        127, 127, 127, 127, 127, 127, 127, 127, 127, 127,
+    ];
+    let format = TextureFormat::R8Unorm;
+    let asset_usage = RenderAssetUsages::default();
+    let image = Image::new(size, dimension, data, format, asset_usage);
+    let handle = images.add(image);
 
-    eframe::run_native("Monet", options, Box::new(|_| Ok(Box::<Monet>::default())))
+    commands.spawn(SpriteBundle {
+        texture: handle,
+        ..default()
+    });
 }
