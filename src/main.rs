@@ -1,35 +1,40 @@
+mod component;
 mod event;
 mod gui;
-mod layer;
 
 use bevy::{
     prelude::*,
     render::{
         render_asset::RenderAssetUsages,
         render_resource::{Extent3d, TextureDimension, TextureFormat},
-        view::RenderLayers,
     },
 };
 use bevy_egui::EguiPlugin;
 
-use event::{mouse_click::mouse_click, mouse_wheel::mouse_wheel};
+use component::layer::Layer;
+use event::{
+    draw_pixel::{draw_pixel, DrawPixel},
+    mouse_click::mouse_click,
+    mouse_wheel::mouse_wheel,
+};
 use gui::top_menu_bar::top_menu_bar;
-use layer::Layer;
 
-fn main() {
+fn main() -> AppExit {
     App::new()
         .insert_resource(ClearColor(Color::srgb(0.35, 0.35, 0.38)))
-        .insert_resource(Msaa::Off)
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(EguiPlugin)
         .add_systems(Startup, (setup_camera, setup_image))
         .add_systems(Update, top_menu_bar)
-        .add_systems(Update, (mouse_wheel, mouse_click))
-        .run();
+        .add_systems(Update, (mouse_wheel, mouse_click, draw_pixel))
+        .add_event::<DrawPixel>()
+        .run()
 }
-const PIXEL_PERFECT_LAYERS: RenderLayers = RenderLayers::layer(0);
+
+// TODO: move somewhere
 fn setup_camera(mut commands: Commands) {
-    commands.spawn((Camera2dBundle::default(), PIXEL_PERFECT_LAYERS));
+    let camera = Camera2dBundle::default();
+    commands.spawn(camera);
 }
 
 fn setup_image(mut commands: Commands, mut images: ResMut<Assets<Image>>) {

@@ -1,29 +1,34 @@
 use bevy::{input::mouse::MouseButtonInput, prelude::*};
 
-use crate::layer::Layer;
+use super::draw_pixel::DrawPixel;
 
 pub fn mouse_click(
     mut event_reader: EventReader<MouseButtonInput>,
-    windows: Query<&Window>,
+    mut event_writer: EventWriter<DrawPixel>,
+    windows_q: Query<&Window>,
     camera_q: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
-    layer_q: Query<&Layer>,
-    mut images: ResMut<Assets<Image>>,
 ) {
     for event in event_reader.read() {
-        if event.button == MouseButton::Left {
-            let (camera, camera_transform) = camera_q.single();
-
-            if let Some(cursor_position) = windows.single().cursor_position() {
-                if let Some(_world_position) =
-                    camera.viewport_to_world_2d(camera_transform, cursor_position)
-                {
-                    let layer = layer_q.single();
-
-                    if let Some(image) = images.get_mut(&layer.handle) {
-                        image.data[55] = 255;
-                    }
-                }
-            }
+        if event.button != MouseButton::Left {
+            return;
         }
+
+        let window = windows_q.single();
+        let cursor_position = window.cursor_position();
+
+        if cursor_position.is_none() {
+            return;
+        }
+
+        let (camera, camera_transform) = camera_q.single();
+        let position = camera.viewport_to_world_2d(camera_transform, cursor_position.unwrap());
+
+        if position.is_none() {
+            return;
+        }
+
+        event_writer.send(DrawPixel {
+            position: position.unwrap(),
+        });
     }
 }
