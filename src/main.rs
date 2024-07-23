@@ -52,6 +52,10 @@ fn setup_image(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
 
     commands.spawn(SpriteBundle {
         texture: handle.clone(),
+        sprite: Sprite {
+            flip_y: true,
+            ..default()
+        },
         ..default()
     });
 

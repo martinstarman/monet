@@ -16,13 +16,18 @@ pub fn draw_pixel(
         let layer = layer_q.single();
 
         if let Some(image) = images_r.get_mut(&layer.image_handle) {
-            let position = event.position;
-            let width = image.width() as f32;
-            let index = (position.y * width) + position.x;
+            let width = image.width() as i32;
+            let height = image.height() as i32;
 
-            // TODO: position is from (-w/2,-h/2)×(w/2,h/2)
-            // TODO: out of bounds check
-            image.data[index as usize] = 255;
+            // move position from [-w/2,-h/2]x[w/2,h/2] to [0,0]x[w,h]
+            let x = (event.position.x.floor() as i32) + (width / 2);
+            let y = (event.position.y.floor() as i32) + (height / 2);
+
+            let index = ((y * width) + x) as usize;
+
+            if index < image.data.len() {
+                image.data[index] = 255; // TODO: color
+            }
         }
     }
 }
