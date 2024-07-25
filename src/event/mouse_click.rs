@@ -1,4 +1,5 @@
 use bevy::{input::mouse::MouseButtonInput, prelude::*};
+use bevy_egui::EguiContexts;
 
 use super::draw_pixel::DrawPixel;
 
@@ -7,8 +8,13 @@ pub fn mouse_click(
     mut event_writer: EventWriter<DrawPixel>,
     windows_q: Query<&Window>,
     camera_q: Query<(&Camera, &GlobalTransform), With<Camera2d>>,
+    mut contexts: EguiContexts,
 ) {
     for event in event_reader.read() {
+        if contexts.ctx_mut().is_pointer_over_area() {
+            return;
+        }
+
         if event.button != MouseButton::Left {
             return;
         }
