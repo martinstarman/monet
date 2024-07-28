@@ -15,6 +15,10 @@ pub fn image_resize(
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimension>,
 ) {
+    if !image_dimension_r.is_changed() {
+        return;
+    }
+
     let width = image_dimension_r.width;
     let height = image_dimension_r.height;
 
