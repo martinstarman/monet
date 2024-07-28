@@ -2,6 +2,7 @@
 TBD
 
 ## Controls
-- `Mouse wheel` - zoom in/out
+- `Mouse wheel scroll` - zoom in/out
+- `Mouse wheel click` - reset zoom and panning
 - `Shift + Mouse wheel` - vertical panning
 - `Ctrl + Mouse wheel` - horizontal panning
