@@ -11,6 +11,7 @@ use bevy::{
         render_resource::{Extent3d, TextureDimension, TextureFormat},
         texture::TextureFormatPixelInfo,
     },
+    window::WindowResolution,
 };
 use bevy_egui::EguiPlugin;
 
@@ -35,6 +36,7 @@ fn main() -> AppExit {
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Monet".into(),
+                        resolution: WindowResolution::new(800., 600.),
                         ..default()
                     }),
                     ..default()
