@@ -2,6 +2,7 @@ mod component;
 mod event;
 mod gui;
 mod resource;
+mod system;
 
 use bevy::{
     prelude::*,
@@ -19,12 +20,15 @@ use event::{
     mouse_click::mouse_click,
     mouse_wheel::mouse_wheel,
 };
-use gui::{left_sidebar::left_sidebar, top_menu_bar::top_menu_bar};
-use resource::pixel_color::PixelColor;
+use gui::{bottom_bar::bottom_bar, left_sidebar::left_sidebar, top_menu_bar::top_menu_bar};
+use resource::{image_dimension::ImageDimension, pixel_color::PixelColor};
+use system::image_resize::image_resize;
 
 fn main() -> AppExit {
     App::new()
         .insert_resource(ClearColor(Color::srgb(0.35, 0.35, 0.38)))
+        .init_resource::<PixelColor>()
+        .init_resource::<ImageDimension>()
         .add_plugins(
             DefaultPlugins
                 .set(ImagePlugin::default_nearest())
@@ -38,10 +42,10 @@ fn main() -> AppExit {
         )
         .add_plugins(EguiPlugin)
         .add_systems(Startup, (setup_camera, setup_image))
-        .add_systems(Update, (left_sidebar, top_menu_bar))
+        .add_systems(Update, (left_sidebar, bottom_bar, top_menu_bar))
         .add_systems(Update, (mouse_wheel, mouse_click, draw_pixel))
+        .add_systems(Update, image_resize)
         .add_event::<DrawPixel>()
-        .init_resource::<PixelColor>()
         .run()
 }
 
@@ -51,9 +55,13 @@ fn setup_camera(mut commands: Commands) {
     commands.spawn(camera);
 }
 
-fn setup_image(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
-    let width = 10;
-    let height = 10;
+fn setup_image(
+    mut commands: Commands,
+    mut images_r: ResMut<Assets<Image>>,
+    image_dimension_r: Res<ImageDimension>,
+) {
+    let width = image_dimension_r.width;
+    let height = image_dimension_r.height;
 
     let size = Extent3d {
         width,
@@ -66,18 +74,20 @@ fn setup_image(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
     let format = TextureFormat::Rgba8Unorm;
     let asset_usage = RenderAssetUsages::default();
     let image = Image::new(size, dimension, data, format, asset_usage);
-    let handle = images.add(image);
+    let image_handle = images_r.add(image);
 
-    commands.spawn(SpriteBundle {
-        texture: handle.clone(),
-        sprite: Sprite {
-            flip_y: true,
+    let entity_id = commands
+        .spawn(SpriteBundle {
+            texture: image_handle.clone(),
+            sprite: Sprite {
+                flip_y: true,
+                ..default()
+            },
             ..default()
-        },
-        ..default()
-    });
+        })
+        .id();
 
-    let layer = Layer::new(handle.clone());
+    let layer = Layer::new(image_handle, entity_id);
 
     commands.spawn(layer);
 }
