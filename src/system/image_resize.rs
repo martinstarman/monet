@@ -1,5 +1,5 @@
 use bevy::{
-    prelude::*,
+    prelude::{Assets, Commands, DetectChanges, Image, Query, Res, ResMut, Sprite, SpriteBundle},
     render::{
         render_asset::RenderAssetUsages,
         render_resource::{Extent3d, TextureDimension, TextureFormat},
@@ -53,9 +53,9 @@ pub fn image_resize(
                 texture: image_handle.clone(),
                 sprite: Sprite {
                     flip_y: true,
-                    ..default()
+                    ..Default::default()
                 },
-                ..default()
+                ..Default::default()
             })
             .id();
 

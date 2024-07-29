@@ -1,4 +1,10 @@
-use bevy::{input::mouse::MouseWheel, prelude::*};
+use bevy::{
+    input::mouse::MouseWheel,
+    prelude::{
+        ButtonInput, Camera2d, EventReader, KeyCode, OrthographicProjection, Query, Res, Transform,
+        With,
+    },
+};
 
 pub fn mouse_wheel(
     mut event_reader: EventReader<MouseWheel>,

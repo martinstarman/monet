@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::prelude::{Component, Entity, Handle, Image};
 
 #[derive(Component)]
 pub struct Layer {

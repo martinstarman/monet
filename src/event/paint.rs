@@ -1,17 +1,20 @@
-use bevy::{prelude::*, render::texture::TextureFormatPixelInfo};
+use bevy::{
+    prelude::{Assets, Event, EventReader, Image, Query, Res, ResMut, Vec2},
+    render::texture::TextureFormatPixelInfo,
+};
 
-use crate::{component::layer::Layer, resource::pixel_color::PixelColor};
+use crate::{component::layer::Layer, resource::color::Color};
 
 #[derive(Event)]
-pub struct DrawPixel {
+pub struct Paint {
     pub position: Vec2,
 }
 
-pub fn draw_pixel(
-    mut event_reader: EventReader<DrawPixel>,
+pub fn paint(
+    mut event_reader: EventReader<Paint>,
     layer_q: Query<&Layer>,
     mut images_r: ResMut<Assets<Image>>,
-    pixel_color: Res<PixelColor>,
+    pixel_color: Res<Color>,
 ) {
     for event in event_reader.read() {
         let layer = layer_q.single();
