@@ -6,14 +6,18 @@ mod system;
 
 use bevy::{
     prelude::{
-        App, AppExit, ClearColor, DefaultPlugins, ImagePlugin, PluginGroup, Startup, Update,
-        Window, WindowPlugin,
+        App, AppExit, ClearColor, DefaultPlugins, ImagePlugin, IntoSystemConfigs, PluginGroup,
+        Startup, Update, Window, WindowPlugin,
     },
     window::WindowResolution,
 };
 use bevy_egui::EguiPlugin;
 
-use event::paint::{paint, Paint};
+use event::{
+    new_layer::{new_layer, NewLayer},
+    paint::{paint, Paint},
+    set_active_layer::{set_active_layer, SetActiveLayer},
+};
 use gui::{
     bottom_bar::bottom_bar, left_sidebar::left_sidebar, right_sidebar::right_sidebar,
     top_menu_bar::top_menu_bar,
@@ -46,18 +50,26 @@ fn main() -> AppExit {
         .add_systems(Startup, (setup_camera, setup_image))
         .add_systems(
             Update,
-            (left_sidebar, right_sidebar, bottom_bar, top_menu_bar),
-        )
-        .add_systems(Update, paint)
-        .add_systems(
-            Update,
             (
+                // gui
+                top_menu_bar,
+                bottom_bar,
+                left_sidebar,
+                right_sidebar,
+                // systems
                 image_resize,
                 middle_mouse_button_click,
                 left_mouse_button_down,
                 mouse_wheel,
-            ),
+                // events
+                paint,
+                new_layer,
+                set_active_layer,
+            )
+                .chain(),
         )
         .add_event::<Paint>()
+        .add_event::<NewLayer>()
+        .add_event::<SetActiveLayer>()
         .run()
 }
