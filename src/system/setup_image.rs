@@ -41,7 +41,7 @@ pub fn setup_image(
         })
         .id();
 
-    let layer = Layer::new(image_handle, entity_id);
+    let layer = Layer::new(String::from("layer #1"), image_handle, entity_id);
 
     commands.spawn(layer);
 }

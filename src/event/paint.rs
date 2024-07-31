@@ -12,12 +12,12 @@ pub struct Paint {
 
 pub fn paint(
     mut event_reader: EventReader<Paint>,
-    layer_q: Query<&Layer>,
+    layers_q: Query<&Layer>,
     mut images_r: ResMut<Assets<Image>>,
     pixel_color: Res<Color>,
 ) {
     for event in event_reader.read() {
-        let layer = layer_q.single();
+        let layer = layers_q.single();
 
         if let Some(image) = images_r.get_mut(&layer.image_handle) {
             let x = event.position.x.floor() as i32;

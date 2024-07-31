@@ -2,6 +2,9 @@ use bevy::prelude::{Component, Entity, Handle, Image};
 
 #[derive(Component)]
 pub struct Layer {
+    /// layer name
+    pub name: String,
+
     /// image resource reference
     pub image_handle: Handle<Image>,
 
@@ -10,10 +13,11 @@ pub struct Layer {
 }
 
 impl Layer {
-    pub fn new(image_handle: Handle<Image>, entity_id: Entity) -> Layer {
+    pub fn new(name: String, image_handle: Handle<Image>, entity_id: Entity) -> Layer {
         Layer {
             image_handle,
             entity_id,
+            name,
         }
     }
 }

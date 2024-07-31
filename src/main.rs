@@ -14,7 +14,10 @@ use bevy::{
 use bevy_egui::EguiPlugin;
 
 use event::paint::{paint, Paint};
-use gui::{bottom_bar::bottom_bar, left_sidebar::left_sidebar, top_menu_bar::top_menu_bar};
+use gui::{
+    bottom_bar::bottom_bar, left_sidebar::left_sidebar, right_sidebar::right_sidebar,
+    top_menu_bar::top_menu_bar,
+};
 use resource::{color::Color, image_dimension::ImageDimension};
 use system::{
     image_resize::image_resize, left_mouse_button_down::left_mouse_button_down,
@@ -41,7 +44,10 @@ fn main() -> AppExit {
         )
         .add_plugins(EguiPlugin)
         .add_systems(Startup, (setup_camera, setup_image))
-        .add_systems(Update, (left_sidebar, bottom_bar, top_menu_bar))
+        .add_systems(
+            Update,
+            (left_sidebar, right_sidebar, bottom_bar, top_menu_bar),
+        )
         .add_systems(Update, paint)
         .add_systems(
             Update,
