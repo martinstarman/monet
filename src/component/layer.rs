@@ -1,4 +1,4 @@
-use bevy::prelude::{Component, Entity, Handle, Image};
+use bevy::prelude::{Component, Handle, Image};
 
 #[derive(Component)]
 pub struct Layer {
@@ -11,21 +11,27 @@ pub struct Layer {
     /// layer to draw on
     pub active: bool,
 
+    /// layer visibility
+    pub visible: bool,
+
     /// image resource reference
     pub image_handle: Handle<Image>,
-
-    /// spawned sprite id
-    pub entity_id: Entity,
 }
 
 impl Layer {
-    pub fn new(name: String, index: u32, image_handle: Handle<Image>, entity_id: Entity) -> Layer {
+    pub fn new(
+        name: String,
+        index: u32,
+        image_handle: Handle<Image>,
+        active: bool,
+        visible: bool,
+    ) -> Layer {
         Layer {
             name,
             index,
-            active: false,
+            active,
+            visible,
             image_handle,
-            entity_id,
         }
     }
 }

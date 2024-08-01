@@ -1,5 +1,7 @@
 use bevy::{
-    prelude::{Assets, Commands, DetectChanges, Image, Query, Res, ResMut, Sprite, SpriteBundle},
+    prelude::{
+        Assets, Commands, DetectChanges, Entity, Image, Query, Res, ResMut, Sprite, SpriteBundle,
+    },
     render::{
         render_asset::RenderAssetUsages,
         render_resource::{Extent3d, TextureDimension, TextureFormat},
@@ -11,7 +13,7 @@ use crate::{component::layer::Layer, resource::image_dimension::ImageDimension};
 
 pub fn image_resize(
     mut commands: Commands,
-    mut layers_q: Query<&mut Layer>,
+    layers_q: Query<(Entity, &Layer)>,
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimension>,
 ) {
@@ -22,7 +24,7 @@ pub fn image_resize(
     let width = image_dimension_r.width;
     let height = image_dimension_r.height;
 
-    for mut layer in &mut layers_q {
+    for (entity, layer) in &layers_q {
         let image = images_r.get(&layer.image_handle);
 
         if image.is_none() {
@@ -30,7 +32,7 @@ pub fn image_resize(
         }
 
         images_r.remove(&layer.image_handle);
-        commands.entity(layer.entity_id).despawn();
+        commands.entity(entity).despawn();
 
         // TODO: duplicate code
         let size = Extent3d {
@@ -48,18 +50,24 @@ pub fn image_resize(
 
         // TODO: preserve data content
 
-        let entity_id = commands
-            .spawn(SpriteBundle {
+        let new_layer = Layer::new(
+            layer.name.clone(),
+            layer.index as u32,
+            image_handle.clone(),
+            layer.active,
+            layer.visible,
+        );
+
+        commands.spawn((
+            new_layer,
+            SpriteBundle {
                 texture: image_handle.clone(),
                 sprite: Sprite {
                     flip_y: true,
                     ..Default::default()
                 },
                 ..Default::default()
-            })
-            .id();
-
-        layer.image_handle = image_handle;
-        layer.entity_id = entity_id;
+            },
+        ));
     }
 }

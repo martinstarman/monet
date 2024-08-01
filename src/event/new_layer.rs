@@ -21,12 +21,16 @@ pub struct NewLayer {}
 pub fn new_layer(
     mut event_reader: EventReader<NewLayer>,
     mut event_writer: EventWriter<SetActiveLayer>,
-    layers_q: Query<&Layer>,
+    mut layers_q: Query<&mut Layer>,
     mut commands: Commands,
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimension>,
 ) {
     for _ in event_reader.read() {
+        for mut layer in &mut layers_q {
+            layer.active = false;
+        }
+
         let layer_index = layers_q.iter().len();
         let mut layer_name = String::from("layer #");
         layer_name.push_str(layer_index.to_string().as_str());
@@ -47,8 +51,17 @@ pub fn new_layer(
         let image = Image::new(size, dimension, data, format, asset_usage);
         let image_handle = images_r.add(image);
 
-        let entity_id = commands
-            .spawn(SpriteBundle {
+        let layer = Layer::new(
+            layer_name,
+            layer_index as u32,
+            image_handle.clone(),
+            true,
+            true,
+        );
+
+        commands.spawn((
+            layer,
+            SpriteBundle {
                 texture: image_handle.clone(),
                 sprite: Sprite {
                     flip_y: true,
@@ -59,12 +72,8 @@ pub fn new_layer(
                     ..Default::default()
                 },
                 ..Default::default()
-            })
-            .id();
-
-        let layer = Layer::new(layer_name, layer_index as u32, image_handle, entity_id);
-
-        commands.spawn(layer);
+            },
+        ));
 
         event_writer.send(SetActiveLayer {
             index: layer_index as u32,

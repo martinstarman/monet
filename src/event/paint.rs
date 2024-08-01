@@ -18,7 +18,7 @@ pub fn paint(
 ) {
     for event in event_reader.read() {
         for layer in &layers_q {
-            if !layer.active {
+            if !layer.active || !layer.visible {
                 continue;
             }
 

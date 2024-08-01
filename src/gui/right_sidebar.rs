@@ -1,4 +1,4 @@
-use bevy::prelude::{EventWriter, Query};
+use bevy::prelude::{EventWriter, Query, Visibility};
 use bevy_egui::{
     egui::{self},
     EguiContexts,
@@ -11,7 +11,7 @@ use crate::{
 
 pub fn right_sidebar(
     mut egui_contexts: EguiContexts,
-    mut layers_q: Query<&mut Layer>,
+    mut layers_q: Query<(&mut Layer, &mut Visibility)>,
     mut new_layer_event: EventWriter<NewLayer>,
     mut set_active_layer_event: EventWriter<SetActiveLayer>,
 ) {
@@ -27,9 +27,21 @@ pub fn right_sidebar(
             egui::ScrollArea::vertical()
                 .auto_shrink(false)
                 .show(ui, |ui| {
-                    for mut layer in &mut layers_q {
+                    for (mut layer, mut visibility) in &mut layers_q {
                         if ui.add(egui::RadioButton::new(layer.active, "")).clicked() {
                             set_active_layer_event.send(SetActiveLayer { index: layer.index });
+                        }
+
+                        // TODO: system
+                        if ui
+                            .add(egui::Checkbox::new(&mut layer.visible, "visible"))
+                            .clicked()
+                        {
+                            *visibility = if layer.visible {
+                                Visibility::Visible
+                            } else {
+                                Visibility::Hidden
+                            };
                         }
 
                         ui.text_edit_singleline(&mut layer.name);
