@@ -40,7 +40,7 @@ pub fn image_resize(
         };
         let dimension = TextureDimension::D2;
         let data: Vec<u8> =
-            vec![255; width as usize * height as usize * TextureFormat::Rgba8Unorm.pixel_size()];
+            vec![0; width as usize * height as usize * TextureFormat::Rgba8Unorm.pixel_size()];
         let format = TextureFormat::Rgba8Unorm;
         let asset_usage = RenderAssetUsages::default();
         let image = Image::new(size, dimension, data, format, asset_usage);
