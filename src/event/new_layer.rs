@@ -21,16 +21,12 @@ pub struct NewLayer {}
 pub fn new_layer(
     mut event_reader: EventReader<NewLayer>,
     mut event_writer: EventWriter<SetActiveLayer>,
-    mut layers_q: Query<&mut Layer>,
+    layers_q: Query<&Layer>,
     mut commands: Commands,
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimensions>,
 ) {
     for _ in event_reader.read() {
-        for mut layer in &mut layers_q {
-            layer.active = false;
-        }
-
         let layer_index = layers_q.iter().len();
         let mut layer_name = String::from("layer #");
         layer_name.push_str(layer_index.to_string().as_str());
