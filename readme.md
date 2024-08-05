@@ -1,5 +1,5 @@
 # Monet
-TBD
+Image editor written in rust using Bevy Engine.
 
 ## Controls
 - `Mouse wheel scroll` - zoom in/out
