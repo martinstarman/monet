@@ -21,7 +21,12 @@ pub fn right_sidebar(
         .max_width(100.)
         .show(egui_contexts.ctx_mut(), |ui| {
             if ui.button("new layer").clicked() {
-                new_layer_event.send(NewLayer {});
+                new_layer_event.send(NewLayer {
+                    name: None,
+                    index: None,
+                    active: Some(true),
+                    visible: Some(true),
+                });
             }
 
             egui::ScrollArea::vertical()

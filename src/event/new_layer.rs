@@ -16,7 +16,12 @@ use crate::{component::layer::Layer, resource::image_dimension::ImageDimensions}
 use super::set_active_layer::SetActiveLayer;
 
 #[derive(Event)]
-pub struct NewLayer {}
+pub struct NewLayer {
+    pub name: Option<String>,
+    pub index: Option<u32>,
+    pub active: Option<bool>,
+    pub visible: Option<bool>,
+}
 
 pub fn new_layer(
     mut event_reader: EventReader<NewLayer>,
@@ -26,10 +31,32 @@ pub fn new_layer(
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimensions>,
 ) {
-    for _ in event_reader.read() {
-        let layer_index = layers_q.iter().len();
-        let mut layer_name = String::from("layer #");
-        layer_name.push_str(layer_index.to_string().as_str());
+    for event in event_reader.read() {
+        let layer_index = if event.index.is_some() {
+            event.index.unwrap()
+        } else {
+            layers_q.iter().len() as u32
+        };
+
+        let layer_name = if event.name.is_some() {
+            event.name.clone().unwrap()
+        } else {
+            let mut name = String::from("layer #");
+            name.push_str(layer_index.to_string().as_str());
+            name
+        };
+
+        let active = if event.active.is_some() {
+            event.active.unwrap()
+        } else {
+            true
+        };
+
+        let visible = if event.visible.is_some() {
+            event.visible.unwrap()
+        } else {
+            true
+        };
 
         let width = image_dimension_r.width;
         let height = image_dimension_r.height;
@@ -51,8 +78,8 @@ pub fn new_layer(
             layer_name,
             layer_index as u32,
             image_handle.clone(),
-            true,
-            true,
+            active,
+            visible,
         );
 
         commands.spawn((
