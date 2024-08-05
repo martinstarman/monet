@@ -11,7 +11,7 @@ use bevy::{
     sprite::{Sprite, SpriteBundle},
 };
 
-use crate::{component::layer::Layer, resource::image_dimension::ImageDimension};
+use crate::{component::layer::Layer, resource::image_dimension::ImageDimensions};
 
 use super::set_active_layer::SetActiveLayer;
 
@@ -24,7 +24,7 @@ pub fn new_layer(
     mut layers_q: Query<&mut Layer>,
     mut commands: Commands,
     mut images_r: ResMut<Assets<Image>>,
-    image_dimension_r: Res<ImageDimension>,
+    image_dimension_r: Res<ImageDimensions>,
 ) {
     for _ in event_reader.read() {
         for mut layer in &mut layers_q {
@@ -76,7 +76,7 @@ pub fn new_layer(
         ));
 
         event_writer.send(SetActiveLayer {
-            index: layer_index as u32,
+            layer_index: layer_index as u32,
         });
     }
 }

@@ -14,7 +14,7 @@ pub fn paint(
     mut event_reader: EventReader<Paint>,
     layers_q: Query<&Layer>,
     mut images_r: ResMut<Assets<Image>>,
-    pixel_color: Res<Color>,
+    color: Res<Color>,
 ) {
     for event in event_reader.read() {
         for layer in &layers_q {
@@ -43,10 +43,10 @@ pub fn paint(
                 let index =
                     ((y * width) + x) as usize * image.texture_descriptor.format.pixel_size();
 
-                image.data[index] = (pixel_color.value[0] * 255.0) as u8;
-                image.data[index + 1] = (pixel_color.value[1] * 255.0) as u8;
-                image.data[index + 2] = (pixel_color.value[2] * 255.0) as u8;
-                image.data[index + 3] = (pixel_color.value[3] * 255.0) as u8;
+                image.data[index] = (color.r * 255.0) as u8;
+                image.data[index + 1] = (color.g * 255.0) as u8;
+                image.data[index + 2] = (color.b * 255.0) as u8;
+                image.data[index + 3] = (color.a * 255.0) as u8;
             }
         }
     }

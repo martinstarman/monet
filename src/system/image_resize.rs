@@ -9,13 +9,13 @@ use bevy::{
     },
 };
 
-use crate::{component::layer::Layer, resource::image_dimension::ImageDimension};
+use crate::{component::layer::Layer, resource::image_dimension::ImageDimensions};
 
 pub fn image_resize(
     mut commands: Commands,
     layers_q: Query<(Entity, &Layer)>,
     mut images_r: ResMut<Assets<Image>>,
-    image_dimension_r: Res<ImageDimension>,
+    image_dimension_r: Res<ImageDimensions>,
 ) {
     if !image_dimension_r.is_changed() {
         return;

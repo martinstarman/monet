@@ -22,7 +22,7 @@ use gui::{
     bottom_bar::bottom_bar, left_sidebar::left_sidebar, right_sidebar::right_sidebar,
     top_menu_bar::top_menu_bar,
 };
-use resource::{color::Color, image_dimension::ImageDimension};
+use resource::{color::Color, image_dimension::ImageDimensions};
 use system::{
     image_resize::image_resize, left_mouse_button_down::left_mouse_button_down,
     middle_mouse_button_click::middle_mouse_button_click, mouse_wheel::mouse_wheel,
@@ -33,7 +33,7 @@ fn main() -> AppExit {
     App::new()
         .insert_resource(ClearColor(bevy::prelude::Color::srgb(0.35, 0.35, 0.38)))
         .init_resource::<Color>()
-        .init_resource::<ImageDimension>()
+        .init_resource::<ImageDimensions>()
         .add_plugins(
             DefaultPlugins
                 .set(ImagePlugin::default_nearest())

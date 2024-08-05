@@ -18,7 +18,7 @@ pub fn right_sidebar(
     egui::SidePanel::right("right_sidebar")
         .resizable(false)
         .min_width(100.)
-        .max_width(100.) // TODO
+        .max_width(100.)
         .show(egui_contexts.ctx_mut(), |ui| {
             if ui.button("new layer").clicked() {
                 new_layer_event.send(NewLayer {});
@@ -29,7 +29,9 @@ pub fn right_sidebar(
                 .show(ui, |ui| {
                     for (mut layer, mut visibility) in &mut layers_q {
                         if ui.add(egui::RadioButton::new(layer.active, "")).clicked() {
-                            set_active_layer_event.send(SetActiveLayer { index: layer.index });
+                            set_active_layer_event.send(SetActiveLayer {
+                                layer_index: layer.index,
+                            });
                         }
 
                         // TODO: system

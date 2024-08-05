@@ -2,13 +2,19 @@ use bevy::prelude::Resource;
 
 #[derive(Resource)]
 pub struct Color {
-    pub value: [f32; 4],
+    pub r: f32,
+    pub g: f32,
+    pub b: f32,
+    pub a: f32,
 }
 
 impl Default for Color {
     fn default() -> Self {
         Color {
-            value: [1., 0., 0., 1.],
+            r: 1.,
+            g: 1.,
+            b: 1.,
+            a: 1.,
         }
     }
 }

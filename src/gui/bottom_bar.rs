@@ -1,9 +1,9 @@
 use bevy::prelude::ResMut;
 use bevy_egui::{egui, EguiContexts};
 
-use crate::resource::image_dimension::ImageDimension;
+use crate::resource::image_dimension::ImageDimensions;
 
-pub fn bottom_bar(mut egui_contexts: EguiContexts, mut image_dimension_r: ResMut<ImageDimension>) {
+pub fn bottom_bar(mut egui_contexts: EguiContexts, mut image_dimension_r: ResMut<ImageDimensions>) {
     egui::TopBottomPanel::bottom("bottom_bar").show(egui_contexts.ctx_mut(), |ui| {
         let mut width = image_dimension_r.width;
         let mut height = image_dimension_r.height;

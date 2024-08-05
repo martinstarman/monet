@@ -4,7 +4,7 @@ use crate::component::layer::Layer;
 
 #[derive(Event)]
 pub struct SetActiveLayer {
-    pub index: u32,
+    pub layer_index: u32,
 }
 
 pub fn set_active_layer(
@@ -13,7 +13,7 @@ pub fn set_active_layer(
 ) {
     for event in event_reader.read() {
         for mut layer in &mut layers_q {
-            layer.active = layer.index == event.index;
+            layer.active = layer.index == event.layer_index;
         }
     }
 }

@@ -8,14 +8,14 @@ pub struct Layer {
     /// layer index
     pub index: u32,
 
+    /// image resource reference
+    pub image_handle: Handle<Image>,
+
     /// layer to draw on
     pub active: bool,
 
     /// layer visibility
     pub visible: bool,
-
-    /// image resource reference
-    pub image_handle: Handle<Image>,
 }
 
 impl Layer {
