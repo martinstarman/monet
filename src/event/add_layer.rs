@@ -82,24 +82,26 @@ pub fn add_layer(
       visible,
     );
 
-    commands.spawn((
-      layer,
-      SpriteBundle {
-        texture: image_handle.clone(),
-        sprite: Sprite {
-          flip_y: true,
+    let entity = commands
+      .spawn((
+        layer,
+        SpriteBundle {
+          texture: image_handle.clone(),
+          sprite: Sprite {
+            flip_y: true,
+            ..Default::default()
+          },
+          transform: Transform {
+            translation: Vec3::new(0., 0., layer_index as f32),
+            ..Default::default()
+          },
           ..Default::default()
         },
-        transform: Transform {
-          translation: Vec3::new(0., 0., layer_index as f32),
-          ..Default::default()
-        },
-        ..Default::default()
-      },
-    ));
+      ))
+      .id();
 
     set_active_layer_event_writer.send(SetActiveLayer {
-      layer_index: layer_index as u32,
+      layer_entity: entity,
     });
   }
 }
