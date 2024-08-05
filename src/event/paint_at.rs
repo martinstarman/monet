@@ -1,30 +1,31 @@
 use bevy::{
-    prelude::{Assets, Event, EventReader, Image, Query, Res, ResMut, Vec2},
+    prelude::{Assets, Event, EventReader, Image, Query, Res, ResMut},
     render::texture::TextureFormatPixelInfo,
 };
 
 use crate::{component::layer::Layer, resource::color::Color};
 
 #[derive(Event)]
-pub struct Paint {
-    pub position: Vec2,
+pub struct PaintAt {
+    pub x: f32,
+    pub y: f32,
 }
 
-pub fn paint(
-    mut event_reader: EventReader<Paint>,
+pub fn paint_at(
+    mut paint_at_event_reader: EventReader<PaintAt>,
     layers_q: Query<&Layer>,
     mut images_r: ResMut<Assets<Image>>,
     color: Res<Color>,
 ) {
-    for event in event_reader.read() {
+    for event in paint_at_event_reader.read() {
         for layer in &layers_q {
             if !layer.active || !layer.visible {
                 continue;
             }
 
             if let Some(image) = images_r.get_mut(&layer.image_handle) {
-                let x = event.position.x.floor() as i32;
-                let y = event.position.y.floor() as i32;
+                let x = event.x.floor() as i32;
+                let y = event.y.floor() as i32;
                 let width = image.width() as i32;
                 let height = image.height() as i32;
 

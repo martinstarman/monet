@@ -1,2 +1,2 @@
 pub mod color;
-pub mod image_dimension;
+pub mod image_dimensions;

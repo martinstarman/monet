@@ -4,8 +4,8 @@ use bevy::{
 };
 use bevy_egui::EguiContexts;
 
-pub fn middle_mouse_button_click(
-    mut event_reader: EventReader<MouseButtonInput>,
+pub fn camera_reset(
+    mut mouse_button_input_event_reader: EventReader<MouseButtonInput>,
     mut camera_q: Query<(&mut OrthographicProjection, &mut Transform), With<Camera2d>>,
     mut egui_contexts: EguiContexts,
 ) {
@@ -13,7 +13,7 @@ pub fn middle_mouse_button_click(
         return;
     }
 
-    for event in event_reader.read() {
+    for event in mouse_button_input_event_reader.read() {
         if event.button == MouseButton::Middle {
             let (mut projection, mut transform) = camera_q.single_mut();
 

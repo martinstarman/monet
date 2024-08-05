@@ -1,3 +1,3 @@
-pub mod new_layer;
-pub mod paint;
+pub mod add_layer;
+pub mod paint_at;
 pub mod set_active_layer;

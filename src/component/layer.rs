@@ -29,9 +29,9 @@ impl Layer {
         Layer {
             name,
             index,
+            image_handle,
             active,
             visible,
-            image_handle,
         }
     }
 }

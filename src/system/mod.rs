@@ -1,6 +1,7 @@
+pub mod camera_pan;
+pub mod camera_reset;
+pub mod camera_setup;
+pub mod camera_zoom;
+pub mod image_paint;
 pub mod image_resize;
-pub mod left_mouse_button_down;
-pub mod middle_mouse_button_click;
-pub mod mouse_wheel;
-pub mod setup_camera;
-pub mod setup_image;
+pub mod image_setup;

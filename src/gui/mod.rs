@@ -1,4 +1,4 @@
-pub mod bottom_bar;
-pub mod left_sidebar;
-pub mod right_sidebar;
-pub mod top_menu_bar;
+pub mod panel_bottom;
+pub mod panel_top;
+pub mod sidebar_left;
+pub mod sidebar_right;

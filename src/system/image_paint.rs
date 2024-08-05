@@ -1,10 +1,10 @@
 use bevy::prelude::{Camera, Camera2d, EventWriter, GlobalTransform, Query, Window, With};
 use bevy_egui::{egui, EguiContexts};
 
-use crate::event::paint::Paint;
+use crate::event::paint_at::PaintAt;
 
-pub fn left_mouse_button_down(
-    mut event_writer: EventWriter<Paint>,
+pub fn image_paint(
+    mut paint_at_event_writer: EventWriter<PaintAt>,
     windows_q: Query<&Window>,
     camera_q: Query<(&mut Camera, &mut GlobalTransform), With<Camera2d>>,
     mut egui_contexts: EguiContexts,
@@ -29,8 +29,9 @@ pub fn left_mouse_button_down(
                 return;
             }
 
-            event_writer.send(Paint {
-                position: position.unwrap(),
+            paint_at_event_writer.send(PaintAt {
+                x: position.unwrap().x,
+                y: position.unwrap().y,
             });
         }
     });

@@ -6,7 +6,7 @@ use bevy_egui::{
 
 use crate::resource::color::Color;
 
-pub fn left_sidebar(mut egui_contexts: EguiContexts, mut color_r: ResMut<Color>) {
+pub fn sidebar_left(mut egui_contexts: EguiContexts, mut color_r: ResMut<Color>) {
     egui::SidePanel::left("left_sidebar")
         .resizable(false)
         .max_width(55.)

@@ -3,7 +3,8 @@ use bevy::prelude::{
 };
 
 use crate::{
-    component::layer::Layer, event::new_layer::NewLayer, resource::image_dimension::ImageDimensions,
+    component::layer::Layer, event::add_layer::AddLayer,
+    resource::image_dimensions::ImageDimensions,
 };
 
 pub fn image_resize(
@@ -11,7 +12,7 @@ pub fn image_resize(
     layers_q: Query<(Entity, &Layer)>,
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimensions>,
-    mut event_writer: EventWriter<NewLayer>,
+    mut add_layer_event_writer: EventWriter<AddLayer>,
 ) {
     if !image_dimension_r.is_changed() {
         return;
@@ -28,7 +29,7 @@ pub fn image_resize(
         commands.entity(entity).despawn();
 
         // TODO: preserve data content
-        event_writer.send(NewLayer {
+        add_layer_event_writer.send(AddLayer {
             name: Some(layer.name.clone()),
             index: Some(layer.index),
             active: Some(layer.active),

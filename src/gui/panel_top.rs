@@ -1,6 +1,6 @@
 use bevy_egui::{egui, EguiContexts};
 
-pub fn top_menu_bar(mut egui_contexts: EguiContexts) {
+pub fn panel_top(mut egui_contexts: EguiContexts) {
     let ctx = egui_contexts.ctx_mut();
 
     egui::TopBottomPanel::top("top_menu_bar").show(ctx, |ui| {

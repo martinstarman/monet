@@ -14,19 +14,19 @@ use bevy::{
 use bevy_egui::EguiPlugin;
 
 use event::{
-    new_layer::{new_layer, NewLayer},
-    paint::{paint, Paint},
+    add_layer::{add_layer, AddLayer},
+    paint_at::{paint_at, PaintAt},
     set_active_layer::{set_active_layer, SetActiveLayer},
 };
 use gui::{
-    bottom_bar::bottom_bar, left_sidebar::left_sidebar, right_sidebar::right_sidebar,
-    top_menu_bar::top_menu_bar,
+    panel_bottom::panel_bottom, panel_top::panel_top, sidebar_left::sidebar_left,
+    sidebar_right::sidebar_right,
 };
-use resource::{color::Color, image_dimension::ImageDimensions};
+use resource::{color::Color, image_dimensions::ImageDimensions};
 use system::{
-    image_resize::image_resize, left_mouse_button_down::left_mouse_button_down,
-    middle_mouse_button_click::middle_mouse_button_click, mouse_wheel::mouse_wheel,
-    setup_camera::setup_camera, setup_image::setup_image,
+    camera_pan::camera_pan, camera_reset::camera_reset, camera_setup::camera_setup,
+    camera_zoom::camera_zoom, image_paint::image_paint, image_resize::image_resize,
+    image_setup::image_setup,
 };
 
 fn main() -> AppExit {
@@ -47,29 +47,30 @@ fn main() -> AppExit {
                 }),
         )
         .add_plugins(EguiPlugin)
-        .add_systems(Startup, (setup_camera, setup_image))
+        .add_systems(Startup, (camera_setup, image_setup))
         .add_systems(
             Update,
             (
                 // gui
-                top_menu_bar,
-                bottom_bar,
-                left_sidebar,
-                right_sidebar,
+                panel_top,
+                panel_bottom,
+                sidebar_left,
+                sidebar_right,
                 // systems
+                camera_pan,
+                camera_reset,
+                camera_zoom,
+                image_paint,
                 image_resize,
-                middle_mouse_button_click,
-                left_mouse_button_down,
-                mouse_wheel,
                 // events
-                paint,
-                new_layer,
+                add_layer,
+                paint_at,
                 set_active_layer,
             )
                 .chain(),
         )
-        .add_event::<Paint>()
-        .add_event::<NewLayer>()
+        .add_event::<AddLayer>()
+        .add_event::<PaintAt>()
         .add_event::<SetActiveLayer>()
         .run()
 }

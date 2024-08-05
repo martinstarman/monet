@@ -6,13 +6,13 @@ use bevy_egui::{
 
 use crate::{
     component::layer::Layer,
-    event::{new_layer::NewLayer, set_active_layer::SetActiveLayer},
+    event::{add_layer::AddLayer, set_active_layer::SetActiveLayer},
 };
 
-pub fn right_sidebar(
+pub fn sidebar_right(
     mut egui_contexts: EguiContexts,
     mut layers_q: Query<(&mut Layer, &mut Visibility)>,
-    mut new_layer_event: EventWriter<NewLayer>,
+    mut new_layer_event: EventWriter<AddLayer>,
     mut set_active_layer_event: EventWriter<SetActiveLayer>,
 ) {
     egui::SidePanel::right("right_sidebar")
@@ -21,7 +21,7 @@ pub fn right_sidebar(
         .max_width(100.)
         .show(egui_contexts.ctx_mut(), |ui| {
             if ui.button("new layer").clicked() {
-                new_layer_event.send(NewLayer {
+                new_layer_event.send(AddLayer {
                     name: None,
                     index: None,
                     active: Some(true),

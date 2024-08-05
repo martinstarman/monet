@@ -11,27 +11,27 @@ use bevy::{
     sprite::{Sprite, SpriteBundle},
 };
 
-use crate::{component::layer::Layer, resource::image_dimension::ImageDimensions};
+use crate::{component::layer::Layer, resource::image_dimensions::ImageDimensions};
 
 use super::set_active_layer::SetActiveLayer;
 
 #[derive(Event)]
-pub struct NewLayer {
+pub struct AddLayer {
     pub name: Option<String>,
     pub index: Option<u32>,
     pub active: Option<bool>,
     pub visible: Option<bool>,
 }
 
-pub fn new_layer(
-    mut event_reader: EventReader<NewLayer>,
-    mut event_writer: EventWriter<SetActiveLayer>,
+pub fn add_layer(
+    mut add_layer_event_reader: EventReader<AddLayer>,
+    mut set_active_layer_event_writer: EventWriter<SetActiveLayer>,
     layers_q: Query<&Layer>,
     mut commands: Commands,
     mut images_r: ResMut<Assets<Image>>,
     image_dimension_r: Res<ImageDimensions>,
 ) {
-    for event in event_reader.read() {
+    for event in add_layer_event_reader.read() {
         let layer_index = if event.index.is_some() {
             event.index.unwrap()
         } else {
@@ -98,7 +98,7 @@ pub fn new_layer(
             },
         ));
 
-        event_writer.send(SetActiveLayer {
+        set_active_layer_event_writer.send(SetActiveLayer {
             layer_index: layer_index as u32,
         });
     }
