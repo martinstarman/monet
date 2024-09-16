@@ -17,21 +17,3 @@ pub struct Layer {
   /// layer visibility
   pub visible: bool,
 }
-
-impl Layer {
-  pub fn new(
-    name: String,
-    index: u32,
-    image_handle: Handle<Image>,
-    active: bool,
-    visible: bool,
-  ) -> Layer {
-    Layer {
-      name,
-      index,
-      image_handle,
-      active,
-      visible,
-    }
-  }
-}

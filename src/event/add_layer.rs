@@ -74,13 +74,13 @@ pub fn add_layer(
     let image = Image::new(size, dimension, data, format, asset_usage);
     let image_handle = images_r.add(image);
 
-    let layer = Layer::new(
-      layer_name,
-      layer_index as u32,
-      image_handle.clone(),
+    let layer = Layer {
+      name: layer_name,
+      index: layer_index as u32,
+      image_handle: image_handle.clone(),
       active,
       visible,
-    );
+    };
 
     let entity = commands
       .spawn((
