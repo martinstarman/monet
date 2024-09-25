@@ -4,8 +4,8 @@ use bevy_egui::{egui, EguiContexts};
 use crate::event::paint_at::PaintAt;
 
 pub fn image_paint(
-  mut paint_at_event_writer: EventWriter<PaintAt>,
-  windows_q: Query<&Window>,
+  mut event_writer: EventWriter<PaintAt>,
+  windows: Query<&Window>,
   camera_q: Query<(&mut Camera, &mut GlobalTransform), With<Camera2d>>,
   mut egui_contexts: EguiContexts,
 ) {
@@ -15,7 +15,7 @@ pub fn image_paint(
 
   egui_contexts.ctx_mut().input(|input| {
     if input.pointer.button_down(egui::PointerButton::Primary) {
-      let window = windows_q.single();
+      let window = windows.single();
       let cursor_position = window.cursor_position();
 
       if cursor_position.is_none() {
@@ -29,7 +29,7 @@ pub fn image_paint(
         return;
       }
 
-      paint_at_event_writer.send(PaintAt {
+      event_writer.send(PaintAt {
         x: position.unwrap().x,
         y: position.unwrap().y,
       });

@@ -12,18 +12,18 @@ pub struct PaintAt {
 }
 
 pub fn paint_at(
-  mut paint_at_event_reader: EventReader<PaintAt>,
-  layers_q: Query<&Layer>,
-  mut images_r: ResMut<Assets<Image>>,
+  mut events: EventReader<PaintAt>,
+  layers: Query<&Layer>,
+  mut images: ResMut<Assets<Image>>,
   color: Res<Color>,
 ) {
-  for event in paint_at_event_reader.read() {
-    for layer in &layers_q {
-      if !layer.active || !layer.visible {
+  for event in events.read() {
+    for layer in &layers {
+      if !layer.is_active || !layer.is_visible {
         continue;
       }
 
-      if let Some(image) = images_r.get_mut(&layer.image_handle) {
+      if let Some(image) = images.get_mut(&layer.image_handle) {
         let x = event.x.floor() as i32;
         let y = event.y.floor() as i32;
         let width = image.width() as i32;

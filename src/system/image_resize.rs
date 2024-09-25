@@ -8,31 +8,25 @@ use crate::{
 
 pub fn image_resize(
   mut commands: Commands,
-  layers_q: Query<(Entity, &Layer)>,
-  mut images_r: ResMut<Assets<Image>>,
-  image_dimension_r: Res<ImageDimensions>,
-  mut add_layer_event_writer: EventWriter<AddLayer>,
+  layers: Query<(Entity, &Layer)>,
+  mut images: ResMut<Assets<Image>>,
+  image_dimensions: Res<ImageDimensions>,
+  mut event_writer: EventWriter<AddLayer>,
 ) {
-  if !image_dimension_r.is_changed() {
+  if !image_dimensions.is_changed() {
     return;
   }
 
-  for (entity, layer) in &layers_q {
-    let image = images_r.get(&layer.image_handle);
+  for (entity, layer) in &layers {
+    let image = images.get(&layer.image_handle);
 
     if image.is_none() {
       continue;
     }
 
-    images_r.remove(&layer.image_handle);
+    // TODO: do not remove&create but update in place and preserve content
+    images.remove(&layer.image_handle);
     commands.entity(entity).despawn();
-
-    // TODO: preserve data content
-    add_layer_event_writer.send(AddLayer {
-      name: Some(layer.name.clone()),
-      index: Some(layer.index),
-      active: Some(layer.active),
-      visible: Some(layer.visible),
-    });
+    event_writer.send(AddLayer {});
   }
 }

@@ -6,48 +6,41 @@ use bevy_egui::{
 
 use crate::{
   component::layer::Layer,
-  event::{add_layer::AddLayer, set_active_layer::SetActiveLayer},
+  event::{add_layer::AddLayer, change_active_layer::ChangeActiveLayer},
 };
 
 pub fn sidebar_right(
   mut egui_contexts: EguiContexts,
-  mut layers_q: Query<(Entity, &mut Layer, &mut Visibility)>,
-  mut new_layer_event: EventWriter<AddLayer>,
-  mut set_active_layer_event: EventWriter<SetActiveLayer>,
+  mut layers: Query<(Entity, &mut Layer, &mut Visibility)>,
+  mut add_layer_event_writer: EventWriter<AddLayer>,
+  mut set_active_layer_event_writer: EventWriter<ChangeActiveLayer>,
 ) {
-  egui::SidePanel::right("right_sidebar")
+  egui::SidePanel::right("sidebar_right")
     .resizable(false)
     .min_width(100.)
     .max_width(100.)
     .show(egui_contexts.ctx_mut(), |ui| {
       if ui.button("new layer").clicked() {
-        new_layer_event.send(AddLayer {
-          name: None,
-          index: None,
-          active: Some(true),
-          visible: Some(true),
-        });
+        add_layer_event_writer.send(AddLayer {});
       }
 
       egui::ScrollArea::vertical()
         .auto_shrink(false)
         .show(ui, |ui| {
-          for (entity, mut layer, mut visibility) in &mut layers_q {
+          for (entity, mut layer, mut visibility) in &mut layers {
             if ui
-              .add(egui::RadioButton::new(layer.active, "active"))
+              .add(egui::RadioButton::new(layer.is_active, "is_active"))
               .clicked()
             {
-              set_active_layer_event.send(SetActiveLayer {
-                layer_entity: entity,
-              });
+              set_active_layer_event_writer.send(ChangeActiveLayer { id: entity });
             }
 
-            // TODO: system
+            // TODO: event
             if ui
-              .add(egui::Checkbox::new(&mut layer.visible, "visible"))
+              .add(egui::Checkbox::new(&mut layer.is_visible, "is_visible"))
               .clicked()
             {
-              *visibility = if layer.visible {
+              *visibility = if layer.is_visible {
                 Visibility::Visible
               } else {
                 Visibility::Hidden

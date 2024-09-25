@@ -5,20 +5,20 @@ use bevy::{
 use bevy_egui::EguiContexts;
 
 pub fn camera_zoom(
-  mut mouse_wheel_event_reader: EventReader<MouseWheel>,
-  mut camera_q: Query<&mut OrthographicProjection, With<Camera2d>>,
-  keys_r: Res<ButtonInput<KeyCode>>,
+  mut events: EventReader<MouseWheel>,
+  mut camera: Query<&mut OrthographicProjection, With<Camera2d>>,
+  keys: Res<ButtonInput<KeyCode>>,
   mut egui_contexts: EguiContexts,
 ) {
   if egui_contexts.ctx_mut().is_pointer_over_area()
-    || keys_r.pressed(KeyCode::ShiftLeft)
-    || keys_r.pressed(KeyCode::ControlLeft)
+    || keys.pressed(KeyCode::ShiftLeft)
+    || keys.pressed(KeyCode::ControlLeft)
   {
     return;
   }
 
-  for event in mouse_wheel_event_reader.read() {
-    let mut projection = camera_q.single_mut();
+  for event in events.read() {
+    let mut projection = camera.single_mut();
 
     if event.y < 0. {
       projection.scale *= 1.25;

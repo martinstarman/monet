@@ -15,8 +15,8 @@ use bevy_egui::EguiPlugin;
 
 use event::{
   add_layer::{add_layer, AddLayer},
+  change_active_layer::{change_active_layer, ChangeActiveLayer},
   paint_at::{paint_at, PaintAt},
-  set_active_layer::{set_active_layer, SetActiveLayer},
 };
 use gui::{
   panel_bottom::panel_bottom, panel_top::panel_top, sidebar_left::sidebar_left,
@@ -65,12 +65,12 @@ fn main() -> AppExit {
         // events
         add_layer,
         paint_at,
-        set_active_layer,
+        change_active_layer,
       )
         .chain(),
     )
     .add_event::<AddLayer>()
     .add_event::<PaintAt>()
-    .add_event::<SetActiveLayer>()
+    .add_event::<ChangeActiveLayer>()
     .run()
 }
