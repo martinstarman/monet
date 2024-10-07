@@ -7,4 +7,4 @@ version = "0.1.0"
 
 [dependencies]
 bevy = "0.14.2"
-bevy_egui = "0.29.0"
+bevy_egui = "0.30.0"
