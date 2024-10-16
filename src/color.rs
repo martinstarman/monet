@@ -38,7 +38,7 @@ impl PartialEq for Color {
 }
 
 #[cfg(test)]
-mod base {
+mod tests {
   use super::*;
 
   #[test]

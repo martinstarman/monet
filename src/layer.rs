@@ -5,6 +5,7 @@ pub struct Layer {
   pub width: usize,
   pub height: usize,
   pub index: usize,
+  pub active: bool,
   pub data: Vec<Color>,
 }
 
@@ -14,6 +15,7 @@ impl Layer {
       width,
       height,
       index,
+      active: false,
       data: vec![Color::default(); width * height],
     }
   }
@@ -28,7 +30,7 @@ impl Layer {
 }
 
 #[cfg(test)]
-mod base {
+mod tests {
   use super::*;
 
   #[test]
@@ -38,6 +40,7 @@ mod base {
     assert_eq!(layer.width, 10);
     assert_eq!(layer.height, 5);
     assert_eq!(layer.index, 0);
+    assert_eq!(layer.active, false);
     assert_eq!(layer.data.len(), 50);
   }
 
@@ -45,6 +48,7 @@ mod base {
   fn paint_at() {
     let mut layer = Layer::new(10, 5, 0);
     let color = Color::new(1, 1, 1, 1);
+
     layer.paint_at(2, 2, color);
 
     assert_eq!(layer.data[22], color);
