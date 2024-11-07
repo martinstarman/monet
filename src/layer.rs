@@ -1,31 +1,36 @@
+use image::{ImageBuffer, Rgba};
+
 use crate::color::Color;
 
 #[derive(Clone)]
 pub struct Layer {
-  pub width: usize,
-  pub height: usize,
-  pub index: usize,
+  pub width: u32,
+  pub height: u32,
+  pub index: u32,
   pub active: bool,
-  pub data: Vec<Color>,
+  pub data: ImageBuffer<Rgba<u16>, Vec<u16>>,
 }
 
 impl Layer {
-  pub fn new(width: usize, height: usize, index: usize) -> Self {
+  pub fn new(width: u32, height: u32, index: u32) -> Self {
     Layer {
       width,
       height,
       index,
       active: false,
-      data: vec![Color::default(); width * height],
+      data: ImageBuffer::new(100, 100),
     }
   }
 
-  pub fn paint_at(&mut self, x: usize, y: usize, color: Color) {
+  pub fn paint_at(&mut self, x: u32, y: u32, color: Color) {
     assert!(x < self.width, "x exceed width");
     assert!(y < self.height, "y exceed height");
 
-    let position = y * self.width + x;
-    self.data[position] = color;
+    self.data.put_pixel(
+      x,
+      y,
+      Rgba([color.red, color.green, color.blue, color.alpha]),
+    );
   }
 }
 
@@ -47,10 +52,15 @@ mod tests {
   #[test]
   fn paint_at() {
     let mut layer = Layer::new(10, 5, 0);
-    let color = Color::new(1, 1, 1, 1);
+    let color = Color::new(1, 2, 3, 4);
 
     layer.paint_at(2, 2, color);
 
-    assert_eq!(layer.data[22], color);
+    let pixel = layer.data.get_pixel(2, 2).0;
+
+    assert_eq!(pixel[0], 1);
+    assert_eq!(pixel[1], 2);
+    assert_eq!(pixel[2], 3);
+    assert_eq!(pixel[3], 4);
   }
 }

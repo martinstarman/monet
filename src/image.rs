@@ -1,13 +1,13 @@
 use crate::{color::Color, layer::Layer};
 
 pub struct Image {
-  pub width: usize,
-  pub height: usize,
+  pub width: u32,
+  pub height: u32,
   pub layers: Vec<Layer>,
 }
 
 impl Image {
-  pub fn new(width: usize, height: usize) -> Self {
+  pub fn new(width: u32, height: u32) -> Self {
     let mut image = Image {
       width,
       height,
@@ -21,18 +21,20 @@ impl Image {
   }
 
   pub fn append_layer(&mut self) {
-    self
-      .layers
-      .push(Layer::new(self.width, self.height, self.layers.len()));
+    self.layers.push(Layer::new(
+      self.width,
+      self.height,
+      self.layers.len() as u32,
+    ));
   }
 
-  pub fn set_active_layer(&mut self, index: usize) {
+  pub fn set_active_layer(&mut self, index: u32) {
     for layer in self.layers.iter_mut() {
       layer.active = layer.index == index;
     }
   }
 
-  pub fn paint_at(&mut self, x: usize, y: usize, color: Color) {
+  pub fn paint_at(&mut self, x: u32, y: u32, color: Color) {
     for layer in self.layers.iter_mut() {
       if layer.active {
         layer.paint_at(x, y, color);
@@ -90,7 +92,7 @@ mod tests {
     image.set_active_layer(1);
     image.paint_at(0, 0, color2);
 
-    assert_eq!(image.layers[0].data[0], color1);
-    assert_eq!(image.layers[1].data[0], color2);
+    assert_eq!(image.layers[0].data.get_pixel(0, 0).0, color1);
+    assert_eq!(image.layers[1].data.get_pixel(0, 0).0, color2);
   }
 }
